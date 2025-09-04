@@ -1,3 +1,34 @@
+let timer;
+let timeLeft = 10; // seconds
+const timerEl = document.createElement("div");
+document.querySelector(".quiz-container").insertBefore(timerEl, optionsEl);
+function startTimer() {
+  clearInterval(timer);
+  timeLeft = 10;
+  timerEl.textContent = `⏳ Time Left: ${timeLeft}s`;
+  timer = setInterval(() => {
+    timeLeft--;
+    timerEl.textContent = `⏳ Time Left: ${timeLeft}s`;
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      nextBtn.click(); // auto move to next
+    }
+  }, 1000);
+}
+
+function loadQuestion() {
+  const q = questions[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.onclick = () => checkAnswer(i);
+    optionsEl.appendChild(btn);
+  });
+  startTimer();
+}
+
 const questions = [
   {
     question: "What does HTML stand for?",
