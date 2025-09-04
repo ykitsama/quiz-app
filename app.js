@@ -90,10 +90,33 @@ function showResult() {
   resultBox.classList.remove("hidden");
   scoreEl.textContent = `${score} / ${questions.length}`;
 }
+// Save score
+let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || [];
+leaderboard.push(score);
+leaderboard.sort((a, b) => b - a); // highest first
+leaderboard = leaderboard.slice(0, 5); // top 5
+localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+
+// Show leaderboard
+const board = leaderboard.map((s, i) => `<li>#${i+1} - ${s} pts</li>`).join("");
+resultBox.innerHTML += `<h3>🏆 Leaderboard</h3><ul>${board}</ul>`;
 
 function restartQuiz() {
   currentQuestion = 0;
   score = 0;
+  document.getElementById("quiz-box").classList.remove("hidden");
+  resultBox.classList.add("hidden");
+  loadQuestion();
+  nextBtn.style.display = "none";
+}
+function shuffle(array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
+function restartQuiz() {
+  currentQuestion = 0;
+  score = 0;
+  questionsShuffled = shuffle([...questions]);
   document.getElementById("quiz-box").classList.remove("hidden");
   resultBox.classList.add("hidden");
   loadQuestion();
